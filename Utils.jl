@@ -9,39 +9,6 @@ export diffrandi,secondInv,binBoolInd, rep_els,deviator,voigt2Tensor,tensor2Voig
 export cddo
 #unshift!(PyVector(pyimport("sys")["path"]), "")
 
-macro s_str(s)
-    Expr(:quote, symbol(s))
-end
-#function get_perms(v,depth=1)
-#    n=length(v)
-#    u=deepcopy(v)
-#    assert(n<7, "too long")
-#    perms=Array(Any,factorial(v))
-#
-#    if n==1
-#        perms=[v]; return;
-#    for i=depth+1:n #swap first and i
-#        u[depth]=v[i]
-#        u[i]=v[depth]
-#        get_perms(u,depth+1)
-function rep_els(x, n)
-    m=length(x)
-    y=Array(Float64,n*m)
-    for i=1:m
-        y[(i-1)*n+1:i*n]=x[i]
-    end
-    return y
-end
-
-function minind(a)
-    for i=1:length(a)
-        if a[i]
-            return i
-        end
-    end
-    return 0
-end
-
 function cddo(fn,dir)
     cdir=pwd()
     cd(dir)
@@ -305,28 +272,28 @@ function rotp(theta,p)
 #wts wts1 and wts2, st sum(wts1)=sum(wts2);
 #Th
 
-#function earthMoversDist(ps1::Array{Float64,2},ps2::Array{Float64,2})
-#  (dim,n)=size(ps1)
-#  costs=Array(Float64,n,n)
-#  for i=1:n
-#    for j=1:n
-#      dp=abs(dot(ps1[:,i],ps2[:,j]))
-#      if dp <=1.
-#        costs[i,j]=acos(dp)
-#        elseif 1.<dp
-#          costs[i,j]=0.
-#        end
-#      end
-#  end
-#  tc=assignment(costs)
-#  return tc
-#  end
+function earthMoversDist(ps1::Array{Float64,2},ps2::Array{Float64,2})
+  (dim,n)=size(ps1)
+  costs=Array(Float64,n,n)
+  for i=1:n
+    for j=1:n
+      dp=abs(dot(ps1[:,i],ps2[:,j]))
+      if dp <=1.
+        costs[i,j]=acos(dp)
+        elseif 1.<dp
+          costs[i,j]=0.
+        end
+      end
+  end
+  tc=assignment(costs)
+  return tc
+  end
 
-#function emd2sm(p)
-#  n=size(p)[2]
-#  sm=repmat([0.,0.,1.]',n)'
-#  return earthMoversDist(p,sm)
-#  end
+function emd2sm(p)
+  n=size(p)[2]
+  sm=repmat([0.,0.,1.]',n)'
+  return earthMoversDist(p,sm)
+  end
     
 function assignDiffN(srtwts1,srtwts2)
   nwts1=Array(Float64,m) #New wts1 array. Some
@@ -406,21 +373,9 @@ function flatten_to_2d(A,index)
     return reshape(A,(si, int(prod(si[2:end])/si[1])))
 end
 
-#function voigt2Tensor(v)
-#  x=zeros(3,3)
-#  x[1,1]=v[1];x[1,2]=v[6];x[1,3]=v[5]
-#  x[2,3]=v[4];x[2,2]=v[2];x[3,3]=v[3]
-#  return x+x'
-#  end
 voigt2Tensor=voigt2Tensor2 
 tensor2Voigt=tensor2Voigt2
 
-#function tensor2Voigt(v)
-#  x=zeros(6)
-#  x[1]=v[1,1];x[2]=v[2,2];x[3]=v[3,3]
-#  x[4]=v[2,3];x[5]=v[1,3];x[6]=v[1,2]
-#  return x
-#  end
 function binBoolInd(x,fn,n)
   ind=1
   for i=2:n

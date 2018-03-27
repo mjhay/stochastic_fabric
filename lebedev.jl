@@ -3,9 +3,6 @@ include("Utils.jl")
 #include("gausspro.jl")
 import  Distributions.Normal
 const lebedev_n=5810
-#cd("..")
-#require("ts.jl")
-#cd("../stochastic")
 function ldlebedev_n()
     lebedev_full=5810
     x=Array(Float64,lebedev_full)
@@ -548,6 +545,8 @@ function get_dj_strain(depth,a=1e-4,tot_depth=1.0,surface_vel=1e-2, kink=0.7)
     return [vert_strain,horiz_strain]
 end
 
+#main function to solve multiple Monte Carlo realizations
+#of jefferys equation.
 function mc_jeff(nt=10,niter=5000,solver=get_stoch_jeff)
     xi=zeros(5,niter,nt)
     dxi=DataFrame()

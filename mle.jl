@@ -290,7 +290,6 @@ end
 
 
 
-import Utils.cddo
 include("../parse_siple.jl")
 fabric = readtable("../wais_fabric_v4.csv")
 fabric_siple = read_siple("../siple") 
